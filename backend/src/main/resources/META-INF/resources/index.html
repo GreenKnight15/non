@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html class="pf-m-redhat-font">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Naughty or Nice?</title>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/patternfly/3.24.0/css/patternfly.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/patternfly/3.24.0/css/patternfly-additions.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/@patternfly/patternfly/patternfly.css">
+    <link rel="stylesheet" href="lights.css">
+    <link rel="stylesheet" href="snow-button.css">
+    <link rel="stylesheet" href="index.css">
+
+</head>
+<body class="bg">
+<canvas></canvas>
+<ul class="lightrope">
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+</ul>
+
+<div id="countdown">
+    <h1>Christmas Countdown</h1>
+    <div id="clock"></div>
+</div>
+<hr>
+<div id="question">
+    <h1>Have you been naughty or nice?</h1>
+</div>
+
+<form>
+    <div class="pf-l-bullseye">
+        <div style="padding: 10px" class="pf-l-bullseye__item">
+            <div class="pf-c-card" style="width:400px; height:175px; border-radius:10px">
+                <strong>
+                    <div class="pf-c-card__header pf-c-title pf-m-md" style="font-family: 'Lobster', cursive;font-size:36px; color:#5e0d0c; text-align: center">Nice</div>
+                </strong>
+                <div class="pf-c-card__body">
+                    <h1 class="nice-count" style="font-family: 'Lobster', cursive;font-size: 26px; text-align: center;color:#5e0d0c"></h1>
+                </div>
+            </div>
+        </div>
+        <div style="padding: 10px" class="pf-l-bullseye__item">
+            <div class="pf-c-card" style="width:400px; height:175px; border-radius:10px">
+                <strong>
+                    <div class="pf-c-card__header pf-c-title pf-m-md" style="font-family: 'Lobster', cursive;font-size:36px; color:#5e0d0c; text-align: center">Naughty</div>
+                </strong>
+                <div class="pf-c-card__body">
+                    <h1 class="naughty-count" style="font-family: 'Lobster', cursive;font-size: 26px; text-align: center;color:#5e0d0c"></h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="margin-top: 20px" class="pf-l-bullseye">
+        <div style="padding: 10px" class="pf-l-bullseye__item">
+            <button id="add-nice" type="button" class="snowButton">Nice</button>
+        </div>
+        <div style="padding: 10px" class="pf-l-bullseye__item">
+            <button id="add-naughty" type="button" class="snowButton">Naughty</button>
+        </div>
+    </div>
+</form>
+<div class="pf-l-level" >
+    <div class="pf-l-level__item">
+    </div>
+    <div class="pf-l-level__item ">
+        <img src="https://cdn.pixabay.com/photo/2017/11/27/11/33/santa-claus-2981153_960_720.png" style="width:250px; height:auto">
+    </div>
+</div>
+
+<footer>
+    <p>Sources:
+        <a href="https://codemyui.com/christmas-button-with-some-snow-on-top/" target="_blank">Snow Buttons</a> |
+        <a href="https://codemyui.com/snowfall-background-animation-using-canvas/" target="_blank">Snow Particles</a> |
+        <a href="https://codepen.io/ADAM_SFP/pen/mdyVGex" target="_blank">jQuery.countdown</a> |
+        <a href="https://codemyui.com/christmas-lights-pure-css/">Christmas Lights</a>
+    </p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/patternfly/3.24.0/js/patternfly.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.countdown/2.2.0/jquery.countdown.js"></script>
+<script src="snow.js"></script>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#clock').countdown('2019/12/25', function(event) {
+            var $this = $(this).html(event.strftime(''
+            + '<span>%w</span> weeks '
+            + '<span>%d</span> days '
+            + '<span>%H</span> hr '
+            + '<span>%M</span> min '
+            + '<span>%S</span> sec'));
+        });
+        setInterval(function(){
+            $.ajax({ url: "/",
+                context: document.body,
+                success: function(){
+                    $.ajax({
+                        url: "/count",
+                        type: "GET",
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                    }).done(function (d) {
+                        $(".nice-count").html(d.NiceCount);
+                        $(".naughty-count").html(d.NaughtyCount);
+                    });
+                }
+            });
+        }, 2000)
+
+        $.ajax({ url: "/",
+            context: document.body,
+            success: function(){
+                $.ajax({
+                    url: "/count",
+                    type: "GET",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                }).done(function (d) {
+                    $(".nice-count").html(d.NiceCount);
+                    $(".naughty-count").html(d.NaughtyCount);
+                });
+            }
+        });
+
+
+        $("#add-nice").click(function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: "/nice",
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+            }).done(function (d) {
+                $(".nice-count").html(d.NiceCount);
+                $(".naughty-count").html(d.NaughtyCount);
+            });
+        });
+
+        $("#add-naughty").click(function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: "/naughty",
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+            }).done(function (d) {
+                $(".nice-count").html(d.NiceCount);
+                $(".naughty-count").html(d.NaughtyCount);
+            });
+        });
+
+    })
+</script>
+</body>
+</html>

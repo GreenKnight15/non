@@ -1,0 +1,57 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  annotations:
+    openshift.io/host.generated: "true"
+  labels:
+    app: non-backend
+  name: nice
+  namespace: non
+spec:
+  path: /nice
+  port:
+    targetPort: 80-tcp
+  subdomain: ""
+  to:
+    kind: Service
+    name: non-backend
+    weight: 100
+  wildcardPolicy: None
+status:
+  ingress:
+    - conditions:
+        - lastTransitionTime: "2019-12-17T08:33:34Z"
+          status: "True"
+          type: Admitted
+      routerCanonicalHostname: apps.ca-central-1.starter.openshift-online.com
+      routerName: default
+      wildcardPolicy: None
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  annotations:
+    openshift.io/host.generated: "true"
+  labels:
+    app: non-backend
+  name: naughty
+  namespace: non
+spec:
+  path: /naughty
+  port:
+    targetPort: 80-tcp
+  subdomain: ""
+  to:
+    kind: Service
+    name: non-backend
+    weight: 100
+  wildcardPolicy: None
+status:
+  ingress:
+    - conditions:
+        - lastTransitionTime: "2019-12-17T08:33:34Z"
+          status: "True"
+          type: Admitted
+      routerCanonicalHostname: apps.ca-central-1.starter.openshift-online.com
+      routerName: default
+      wildcardPolicy: None
