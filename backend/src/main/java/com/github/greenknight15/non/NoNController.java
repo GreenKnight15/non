@@ -20,23 +20,22 @@ public class NoNController {
     @Path("/count")
     @Produces(MediaType.APPLICATION_JSON)
     public CompletionStage<Count> GetCount() {
-
-        return service.GetCount();
+        return service.getLatest();
     }
 
     @POST
     @Path("/nice")
     @Produces(MediaType.APPLICATION_JSON)
     public CompletionStage<Count> IncrementNiceCount() {
-
-        return service.IncrementNiceCount();
+        service.IncrementNiceCount();
+        return service.getLatest();
     }
 
     @POST
     @Path("/naughty")
     @Produces(MediaType.APPLICATION_JSON)
     public CompletionStage<Count> IncrementNaughtyCount() {
-
-        return service.IncrementNaughtyCount();
+        service.IncrementNaughtyCount();
+        return service.getLatest();
     }
 }
