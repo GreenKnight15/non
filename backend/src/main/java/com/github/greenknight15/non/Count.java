@@ -2,14 +2,14 @@ package com.github.greenknight15.non;
 
 public class Count {
 
-    public int NiceCount;
-    public int NaughtyCount;
+    public double NiceCount;
+    public double NaughtyCount;
 
     public Count() {
 
     }
 
-    public Count(int niceCount, int naughtyCount) {
+    public Count(double niceCount, double naughtyCount) {
         this.NiceCount = niceCount;
         this.NaughtyCount = naughtyCount;
     }

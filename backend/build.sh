@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 mvnw clean -Pnative
 mvnw package -Pnative -Dquarkus.native.container-build=true
-docker build -f src/main/docker/Dockerfile.native -t greenknight15/non:v1 .
-docker push greenknight15/non:v1
+docker build -f src/main/docker/Dockerfile.native -t greenknight15/non:v2 .
+docker push greenknight15/non:v2
 
 # mvnw clean -Pnativemvnw clean -Pnative
 # mvnw compile quarkus:dev -Ddebug=5006
@@ -33,3 +33,4 @@ docker push greenknight15/non:v1
 # https://quarkus.io/guides/building-native-image#producing-a-native-executable
 # https://github.com/quarkusio/quarkus-quickstarts
 # https://quarkus.io/guides/rest-json
+# https://quarkus.io/guides/mongodb
