@@ -17,8 +17,9 @@ canvas {
 #question {
   color: white;
   margin: 4em auto 0 auto;
-  width: 35%;
+  text-align: center;
 }
+
 #question h1 {
   font-family: 'Lobster', cursive;
   font-size: 2em;
@@ -39,7 +40,7 @@ canvas {
 #countdown {
   color: white;
   margin: 4em auto 0 auto;
-  width: 35%;
+  text-align: center;
 }
 #countdown h1 {
   font-family: 'Lobster', cursive;
@@ -58,4 +59,10 @@ canvas {
 }
 #countdown span:first-child {
   margin-left: 0;
+}
+
+footer {
+    display: flex;
+    justify-content: center;
+    padding: 5px;
 }

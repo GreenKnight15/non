@@ -27,7 +27,7 @@ Set db conext to 'non'
 Insert inital data to create collection and default values
 
 `db.count.insert({naughty: 0, nice: 0})`
-
+`db.NoNList.insert({naughty: 0, nice: 0})`
 ####drop non
 Selct non DB context
 

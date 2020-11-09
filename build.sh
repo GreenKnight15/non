@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 mvnw clean -Pnative
-mvnw package -Pnative -Dquarkus.native.container-build=true
+mvn.cmd package -Pnative -Dquarkus.native.container-build=true
 docker build -f src/main/docker/Dockerfile.native -t greenknight15/non:dev .
-#docker push greenknight15/non:v2
+# docker push greenknight15/non:v2
+# docker build -f src/main/docker/Dockerfile.native -t greenknight15/non:v3 .
+# docker push greenknight15/non:v3
 
 # mvnw clean -Pnativemvnw clean -Pnative
 # mvnw compile quarkus:dev -Ddebug=5006

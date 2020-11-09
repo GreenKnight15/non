@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: non
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: non
+  template:
+    metadata:
+      labels:
+        app: non
+    spec:
+      containers:
+        - name: non
+          image: greenknight15/non:v3
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: MONGODB_HOST
+              value: "mongodb.default.svc.cluster.local:27017"
+            - name: MONGODB_USER
+              value: "non"
+            - name: MONGODB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb
+                  key: mongodb-password
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: nginx-service
+  annotations:
+    service.beta.kubernetes.io/oci-load-balancer-ssl-ports: "443"
+    service.beta.kubernetes.io/oci-load-balancer-tls-secret: ssl-certificate-secret
+    service.beta.kubernetes.io/oci-load-balancer-backend-protocol: "HTTP"
+    service.beta.kubernetes.io/oci-load-balancer-security-list-management-mode: "Frontend"
+spec:
+  selector:
+    app: non
+  type: LoadBalancer
+  ports:
+    - name: https
+      port: 443
+      targetPort: 8080
