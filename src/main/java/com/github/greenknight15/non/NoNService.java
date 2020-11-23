@@ -1,16 +1,22 @@
 package com.github.greenknight15.non;
 
-import io.quarkus.mongodb.reactive.ReactiveMongoClient;
-import io.quarkus.mongodb.reactive.ReactiveMongoCollection;
+import com.github.greenknight15.non.models.StateLeaderboard;
+import com.github.greenknight15.non.models.StateLeaderboardRecord;
+import com.github.greenknight15.non.repositories.LocationRepository;
+import com.github.greenknight15.non.repositories.entities.Location;
+import com.mongodb.client.model.*;
+
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletionStage;
-import com.mongodb.client.result.UpdateResult;
-import org.bson.Document;
+
+import io.smallrye.mutiny.Multi;
+import io.vertx.core.json.JsonObject;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import static com.mongodb.client.model.Filters.gte;
-import static com.mongodb.client.model.Updates.inc;
+
 import java.time.LocalDate;
 import com.github.greenknight15.non.models.Status;
 import com.github.greenknight15.non.models.ListStatus;
@@ -25,26 +31,15 @@ import java.util.Arrays;
 public class NoNService {
 
     @Inject
+    LocationRepository locationRepository;
+
+    @Inject
     NoNRepository nonRepository;
 
-    @Inject ReactiveMongoClient mongoClient;
+    @Inject
+    GeoService geoService;
 
     private static final Logger LOG = Logger.getLogger(NoNService.class);
-
-//    public CompletionStage<Count> getCount() {
-//
-//        return getCollection().find().collectItems().first().map(document ->{
-//                    return new Count(document.getDouble("nice"), document.getDouble("naughty"));
-//                }).subscribeAsCompletionStage();
-//    }
-
-    public CompletionStage<UpdateResult> IncrementNiceCount(){
-        return getCollection().updateOne(gte("nice", 0), inc("nice", 1)).subscribeAsCompletionStage();
-    }
-
-    public CompletionStage<UpdateResult> IncrementNaughtyCount(){
-        return getCollection().updateOne(gte("naughty", 0), inc("naughty", 1)).subscribeAsCompletionStage();
-    }
 
     public CompletionStage<Void> UpdateUser(String ip, Status status){
         // Don't use indefinitely
@@ -81,8 +76,64 @@ public class NoNService {
         return  uni.subscribeAsCompletionStage();
     }
 
+    public CompletionStage<Void> UpdateLocation(String ip) {
+        LOG.debug("Updating location for "+ ip);
+        Location location = locationRepository.findByIp(ip).await().atMost(Duration.ofSeconds(2));
+        if(location == null) {
+            Location loca = this.getLocation(ip).toCompletableFuture().join();
+            Uni<Void> result = locationRepository.persist(loca);
+            return result.subscribeAsCompletionStage();
+        } else {
+            return null;
+        }
+    }
 
-    private ReactiveMongoCollection<Document> getCollection() {
-        return mongoClient.getDatabase("non").getCollection("count");
+    private CompletionStage<Location> getLocation(String ip) {
+
+        Uni<JsonObject> jsonObject = geoService.getGeoLocation(ip);
+        return jsonObject.onItem().transform(json -> {
+            String city = json.getString("geoplugin_city");
+            String state = json.getString("geoplugin_region");
+            String stateCode = json.getString("geoplugin_regionCode");
+            String areaCode = json.getString("geoplugin_areaCode");
+            String country = json.getString("geoplugin_countryName");
+            String countryCode = json.getString("geoplugin_countryCode");
+
+            return new Location(ip, city, state, stateCode, country, countryCode, areaCode);
+        }).subscribeAsCompletionStage();
+    }
+
+    // TODO Clean up and make UI
+    public Multi<StateLeaderboardRecord> getLeaderboard(String scope) {
+        LOG.debug("Getting State Leader Board");
+
+        ArrayList<BsonField> groups1 = new ArrayList<>();
+        groups1.add(Accumulators.sum("count", 1));
+        groups1.add(Accumulators.max("state", "$state"));
+
+        String groupBy = "";
+        String fieldName = "";
+
+        if(scope == "State") {
+            groupBy = "$stateCode";
+            fieldName = "stateCode";
+        }
+
+        List agg = Arrays.asList(
+                Aggregates.match(Filters.ne(fieldName, "")),
+                Aggregates.group("$stateCode", groups1),
+                Aggregates.project(
+                        Projections.fields(
+                                Projections.excludeId(),
+                                Projections.computed("count", 1),
+                                Projections.computed("state", 1),
+                                Projections.computed(fieldName, "$_id")
+                        )
+                ),
+                Aggregates.sort(Sorts.descending("count"))
+        );
+
+        return locationRepository.mongoCollection()
+                .aggregate(agg, StateLeaderboardRecord.class);
     }
 }

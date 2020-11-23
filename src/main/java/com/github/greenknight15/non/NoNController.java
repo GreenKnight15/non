@@ -1,5 +1,7 @@
 package com.github.greenknight15.non;
 
+import com.github.greenknight15.non.models.StateLeaderboardRecord;
+import io.smallrye.mutiny.Multi;
 import org.jboss.logging.Logger;
 import java.util.concurrent.CompletionStage;
 import javax.inject.Inject;
@@ -34,6 +36,13 @@ public class NoNController {
         return service.getListStatus(remoteAddress);
     }
 
+    @GET
+    @Path("/states")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Multi<StateLeaderboardRecord> getStates() {
+        return service.getLeaderboard("State");
+    }
+
 
     @POST
     @Path("/nice")
@@ -42,6 +51,7 @@ public class NoNController {
         String remoteAddress = rc.request().headers().get("X-Real-IP");
         LOG.debug("Post nice request from " + remoteAddress);
         service.UpdateUser(remoteAddress, Status.NICE);
+        service.UpdateLocation(remoteAddress);
         return service.getListStatus(remoteAddress);
     }
 
@@ -52,6 +62,7 @@ public class NoNController {
         String remoteAddress = rc.request().headers().get("X-Real-IP");
         LOG.debug("Post naughty request from " + remoteAddress);
         service.UpdateUser(remoteAddress, Status.NAUGHTY);
+        service.UpdateLocation(remoteAddress);
         return service.getListStatus(remoteAddress);
     }
 
