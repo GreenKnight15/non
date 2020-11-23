@@ -2,10 +2,10 @@
         $(".nice-count").html(d.NiceCount);
         $(".naughty-count").html(d.NaughtyCount);
 
-        if(d.submission.status == "NAUGHTY") {
+        if(d.submission && d.submission.status == "NAUGHTY") {
             $("#add-naughty").attr("disabled", true);
             $("#add-nice").attr("disabled", false);
-        } else if(d.submission.status == "NICE") {
+        } else if(d.submission && d.submission.status == "NICE") {
             $("#add-naughty").attr("disabled", false);
             $("#add-nice").attr("disabled", true);
         } else {

@@ -1,7 +1,6 @@
 package com.github.greenknight15.non;
 
-import com.github.greenknight15.non.models.StateLeaderboard;
-import com.github.greenknight15.non.models.StateLeaderboardRecord;
+import com.github.greenknight15.non.models.*;
 import com.github.greenknight15.non.repositories.LocationRepository;
 import com.github.greenknight15.non.repositories.entities.Location;
 import com.mongodb.client.model.*;
@@ -9,6 +8,7 @@ import com.mongodb.client.model.*;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 
 import io.smallrye.mutiny.Multi;
@@ -18,8 +18,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 import java.time.LocalDate;
-import com.github.greenknight15.non.models.Status;
-import com.github.greenknight15.non.models.ListStatus;
+
 import com.github.greenknight15.non.repositories.NoNRepository;
 import com.github.greenknight15.non.repositories.entities.NoNSubmission;
 import io.smallrye.mutiny.Uni;
@@ -42,25 +41,53 @@ public class NoNService {
     private static final Logger LOG = Logger.getLogger(NoNService.class);
 
     public CompletionStage<Void> UpdateUser(String ip, Status status){
+        if(ip == null) {
+            return null;
+        }
         // Don't use indefinitely
-        NoNSubmission submission = nonRepository.findByIp(ip).await().atMost(Duration.ofSeconds(2));
-        LOG.debug("Existing status " + submission);
-        if(submission == null) {
-            NoNSubmission newSubmission = new NoNSubmission(ip, LocalDate.now(), status);
-            Uni<Void> result = nonRepository.persist(newSubmission);
-            return result.subscribeAsCompletionStage();
-        } else {
+        Optional<NoNSubmission> submission = nonRepository.findByIp(ip).await().atMost(Duration.ofSeconds(2));
+        LOG.debug("Existing status " + submission.isPresent());
+        if(submission.isPresent() && submission.get().get_country() == null) {
+            LOG.debug("Adding location to missing record");
+            Location location = this.getLocation(ip).toCompletableFuture().join();
+            LOG.debug("Adding location "+ location.country);
+
+            NoNSubmission newSubmission = new NoNSubmission(ip,
+                    LocalDate.now(),
+                    status,
+                    location.city,
+                    location.state,
+                    location.stateCode,
+                    location.country,
+                    location.stateCode,
+                    location.areaCode);
+             nonRepository.replaceBySubmission(newSubmission).await().atMost(Duration.ofSeconds(2));
+             return null;
+        } else if(submission.isPresent() ) {
             LOG.debug("Updating status for " + ip + " to " + status);
             nonRepository.updateStatusByIp(status,ip).await().atMost(Duration.ofSeconds(2));
-            //nonRepository.update("status", status).where("ip", ip).subscribeAsCompletionStage();
+            return null;
+        } else {
+            Location location = this.getLocation(ip).toCompletableFuture().join();
+            NoNSubmission newSubmission = new NoNSubmission(ip,
+                    LocalDate.now(),
+                    status,
+                    location.city,
+                    location.state,
+                    location.stateCode,
+                    location.country,
+                    location.stateCode,
+                    location.areaCode);
+            Uni<Void> result = nonRepository.persist(newSubmission);
+            return result.subscribeAsCompletionStage();
         }
-        return null;
     }
 
     public CompletionStage<ListStatus> getListStatus(String ip) {
         Uni<Long> niceCount = nonRepository.count("status", Status.NICE);
         Uni<Long> naughtyCount = nonRepository.count("status", Status.NAUGHTY);
-        Uni<NoNSubmission> submission = nonRepository.findByIp(ip);
+
+        Uni<Optional<NoNSubmission>> submission = nonRepository.findByIp(ip);
 
         List<Uni<?>> list = Arrays.asList(niceCount, naughtyCount, submission);
 
@@ -69,7 +96,7 @@ public class NoNService {
             return new ListStatus(
                     (Long)results.get(0),
                     (Long)results.get(1),
-                    (NoNSubmission)results.get(2)
+                    (Optional<NoNSubmission>) results.get(2)
             );
         });
 
@@ -77,6 +104,9 @@ public class NoNService {
     }
 
     public CompletionStage<Void> UpdateLocation(String ip) {
+        if(ip == null) {
+            return null;
+        }
         LOG.debug("Updating location for "+ ip);
         Location location = locationRepository.findByIp(ip).await().atMost(Duration.ofSeconds(2));
         if(location == null) {
@@ -103,37 +133,16 @@ public class NoNService {
         }).subscribeAsCompletionStage();
     }
 
-    // TODO Clean up and make UI
-    public Multi<StateLeaderboardRecord> getLeaderboard(String scope) {
-        LOG.debug("Getting State Leader Board");
-
-        ArrayList<BsonField> groups1 = new ArrayList<>();
-        groups1.add(Accumulators.sum("count", 1));
-        groups1.add(Accumulators.max("state", "$state"));
-
-        String groupBy = "";
-        String fieldName = "";
-
-        if(scope == "State") {
-            groupBy = "$stateCode";
-            fieldName = "stateCode";
-        }
-
-        List agg = Arrays.asList(
-                Aggregates.match(Filters.ne(fieldName, "")),
-                Aggregates.group("$stateCode", groups1),
-                Aggregates.project(
-                        Projections.fields(
-                                Projections.excludeId(),
-                                Projections.computed("count", 1),
-                                Projections.computed("state", 1),
-                                Projections.computed(fieldName, "$_id")
-                        )
-                ),
-                Aggregates.sort(Sorts.descending("count"))
-        );
-
-        return locationRepository.mongoCollection()
-                .aggregate(agg, StateLeaderboardRecord.class);
+    public Multi<StateLeaderboardRecord> getStateLeaderboard() {
+        LOG.debug("Getting State Leaderboard");
+        return nonRepository.getStateLeaderboard();
+    }
+    public Multi<CityLeaderboardRecord> getCityLeaderboard() {
+        LOG.debug("Getting City Leaderboard");
+        return locationRepository.getCityLeaderboard();
+    }
+    public Multi<CountryLeaderboardRecord> getCountryLeaderboard() {
+        LOG.debug("Getting Country Leaderboard");
+        return locationRepository.getCountryLeaderboard();
     }
 }

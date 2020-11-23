@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Naughty or Nice?</title>
+    <link rel="stylesheet" href="https://gitcdn.xyz/cdn/angular/bower-material/master/angular-material.css">
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/patternfly/3.24.0/css/patternfly.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/patternfly/3.24.0/css/patternfly-additions.min.css">
     <link rel="stylesheet" href="https://unpkg.com/@patternfly/patternfly/patternfly.css">
@@ -100,6 +101,55 @@
         </div>
     </div>
 </form>
+<div style="padding:24px"></div>
+<div ng-app="non" ng-controller="nonController" ng-cloak layout-gt-sm="row"  layout-align="center">
+
+    <div flex-gt-sm="30" flex class="flex-gt-sm-30 flex">
+
+        <md-toolbar layout="row" class="md-hue-1">
+            <div class="md-toolbar-tools">
+                <span>Nice Leaderboard</span>
+            </div>
+        </md-toolbar>
+
+        <md-content>
+            <md-list class="md-dense" flex>
+                <md-subheader class="md-no-sticky">States</md-subheader>
+                <md-list-item ng-repeat="state in niceStates | orderBy:'count'" ng-click="null">
+                    <div class="md-list-item-text" layout="row" ng-if="state.state">
+                        <h3>{{ state.state }}</h3>
+                        <h1 class="md-secondary" >{{ state.count }}</h1>
+                    </div>
+                </md-list-item>
+            </md-list>
+        </md-content>
+        <md-divider></md-divider>
+    </div>
+    <md-divider ></md-divider>
+
+    <div flex-gt-sm="30" flex class="flex-gt-sm-30 flex">
+
+        <md-toolbar layout="row"  class="md-hue-1">
+            <div class="md-toolbar-tools">
+                <span>Naughty Leaderboard</span>
+            </div>
+        </md-toolbar>
+
+        <md-content>
+            <md-list class="md-dense" flex>
+                <md-subheader class="md-no-sticky" >States</md-subheader>
+                <md-list-item class="md-2-line" ng-repeat="st in naughtyStates | orderBy:'-count'" ng-click="null">
+                    <div class="md-list-item-text" layout="row" ng-if='st.state'>
+                        <h3>{{ st.state }}</h3 >
+                        <h3>{{ st.stateCode }}</h3>
+                        <h1 class="md-secondary" >{{ st.count }}</h1>
+                    </div>
+                </md-list-item>
+            </md-list>
+        </md-content>
+        <md-divider></md-divider>
+    </div>
+</div>
 <div class="pf-l-level" >
     <div class="pf-l-level__item">
     </div>
@@ -118,9 +168,20 @@
 </body>
 </html>
 
+<!-- AngularJS Material Dependencies -->
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular-animate.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular-aria.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular-messages.min.js"></script>
+
+<!-- AngularJS Material Javascript using GitCDN to load directly from `bower-material/master` -->
+<script src="https://gitcdn.xyz/cdn/angular/bower-material/master/angular-material.js"></script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/patternfly/3.24.0/js/patternfly.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.countdown/2.2.0/jquery.countdown.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
 <script src="snow.js"></script>
 <script src="ajax.js"></script>
+<script src="nonController.js"></script>

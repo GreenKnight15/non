@@ -1,7 +1,8 @@
 package com.github.greenknight15.non;
 
-import com.github.greenknight15.non.models.StateLeaderboardRecord;
+import com.github.greenknight15.non.models.*;
 import io.smallrye.mutiny.Multi;
+import io.vertx.ext.web.client.HttpResponse;
 import org.jboss.logging.Logger;
 import java.util.concurrent.CompletionStage;
 import javax.inject.Inject;
@@ -11,9 +12,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import com.github.greenknight15.non.models.ListStatus;
 import io.vertx.ext.web.RoutingContext;
-import com.github.greenknight15.non.models.Status;
 
 @Path("/")
 @Produces(MediaType.APPLICATION_JSON)
@@ -40,9 +39,22 @@ public class NoNController {
     @Path("/states")
     @Produces(MediaType.APPLICATION_JSON)
     public Multi<StateLeaderboardRecord> getStates() {
-        return service.getLeaderboard("State");
+        return service.getStateLeaderboard();
     }
 
+    @GET
+    @Path("/cities")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Multi<CityLeaderboardRecord> getCities() {
+        return service.getCityLeaderboard();
+    }
+
+    @GET
+    @Path("/countries")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Multi<CountryLeaderboardRecord> getCountries() {
+        return service.getCountryLeaderboard();
+    }
 
     @POST
     @Path("/nice")
@@ -51,7 +63,6 @@ public class NoNController {
         String remoteAddress = rc.request().headers().get("X-Real-IP");
         LOG.debug("Post nice request from " + remoteAddress);
         service.UpdateUser(remoteAddress, Status.NICE);
-        service.UpdateLocation(remoteAddress);
         return service.getListStatus(remoteAddress);
     }
 
@@ -62,7 +73,6 @@ public class NoNController {
         String remoteAddress = rc.request().headers().get("X-Real-IP");
         LOG.debug("Post naughty request from " + remoteAddress);
         service.UpdateUser(remoteAddress, Status.NAUGHTY);
-        service.UpdateLocation(remoteAddress);
         return service.getListStatus(remoteAddress);
     }
 
