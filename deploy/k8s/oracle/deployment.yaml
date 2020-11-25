@@ -6,15 +6,46 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: non
+      app: nonv3
   template:
     metadata:
       labels:
-        app: non
+        app: nonv3
     spec:
       containers:
         - name: non
           image: greenknight15/non:v3
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: MONGODB_HOST
+              value: "mongodb.default.svc.cluster.local:27017"
+            - name: MONGODB_USER
+              value: "non"
+            - name: MONGODB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb
+                  key: mongodb-password
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: non-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nonv4
+  template:
+    metadata:
+      labels:
+        app: nonv4
+    spec:
+      containers:
+        - name: non
+          image: greenknight15/non:v4
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
@@ -40,7 +71,7 @@ metadata:
     service.beta.kubernetes.io/oci-load-balancer-security-list-management-mode: "Frontend"
 spec:
   selector:
-    app: non
+    app: nonv4
   type: LoadBalancer
   ports:
     - name: https

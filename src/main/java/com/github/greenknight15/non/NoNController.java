@@ -75,12 +75,4 @@ public class NoNController {
         service.UpdateUser(remoteAddress, Status.NAUGHTY);
         return service.getListStatus(remoteAddress);
     }
-
-//    @POST
-//    @Path("/naughty")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public CompletionStage<Count> IncrementNaughtyCount() {
-//        service.IncrementNaughtyCount();
-//        return service.getCount();
-//    }
 }

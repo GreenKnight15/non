@@ -34,7 +34,7 @@ public class GeoService {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{ip}")
     public Uni<JsonObject> getGeoLocation(String ip) {
-        LOG.debug("Getting location for" + ip);
+        LOG.debug("Requesting location for " + ip);
         return client.get("/json.gp")
                 .addQueryParam("ip",ip)
                 .send()

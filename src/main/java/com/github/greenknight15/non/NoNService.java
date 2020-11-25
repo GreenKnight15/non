@@ -59,7 +59,7 @@ public class NoNService {
                     location.state,
                     location.stateCode,
                     location.country,
-                    location.stateCode,
+                    location.countryCode,
                     location.areaCode);
              nonRepository.replaceBySubmission(newSubmission).await().atMost(Duration.ofSeconds(2));
              return null;
@@ -76,7 +76,7 @@ public class NoNService {
                     location.state,
                     location.stateCode,
                     location.country,
-                    location.stateCode,
+                    location.countryCode,
                     location.areaCode);
             Uni<Void> result = nonRepository.persist(newSubmission);
             return result.subscribeAsCompletionStage();
@@ -143,6 +143,6 @@ public class NoNService {
     }
     public Multi<CountryLeaderboardRecord> getCountryLeaderboard() {
         LOG.debug("Getting Country Leaderboard");
-        return locationRepository.getCountryLeaderboard();
+        return nonRepository.getCountryLeaderboard();
     }
 }
