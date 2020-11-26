@@ -137,10 +137,12 @@ public class NoNService {
         LOG.debug("Getting State Leaderboard");
         return nonRepository.getStateLeaderboard();
     }
+
     public Multi<CityLeaderboardRecord> getCityLeaderboard() {
         LOG.debug("Getting City Leaderboard");
-        return locationRepository.getCityLeaderboard();
+        return nonRepository.getCityLeaderboard();
     }
+
     public Multi<CountryLeaderboardRecord> getCountryLeaderboard() {
         LOG.debug("Getting Country Leaderboard");
         return nonRepository.getCountryLeaderboard();

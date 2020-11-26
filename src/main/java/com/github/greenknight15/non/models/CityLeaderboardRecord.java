@@ -2,9 +2,11 @@ package com.github.greenknight15.non.models;
 
 import org.bson.codecs.pojo.annotations.BsonProperty;
 
+import java.util.List;
+
 public class CityLeaderboardRecord {
-    @BsonProperty("city")
-    public String city;
-    @BsonProperty("count")
-    public Long count;
+    @BsonProperty("cities")
+    public List<CityRecord> cities;
+    @BsonProperty("_id")
+    public String status;
 }

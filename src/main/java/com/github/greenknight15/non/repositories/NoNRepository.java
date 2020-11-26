@@ -1,5 +1,6 @@
 package com.github.greenknight15.non.repositories;
 
+import com.github.greenknight15.non.models.CityLeaderboardRecord;
 import com.github.greenknight15.non.models.CountryLeaderboardRecord;
 import com.github.greenknight15.non.models.StateLeaderboardRecord;
 import com.mongodb.BasicDBObject;
@@ -105,6 +106,41 @@ public class NoNRepository implements ReactivePanacheMongoRepository<NoNSubmissi
 
         );
         return this.mongoCollection().aggregate(agg, CountryLeaderboardRecord.class);
+    }
+
+    public Multi<CityLeaderboardRecord> getCityLeaderboard() {
+        Map<String, Object> dbObjIdMap = new HashMap<String, Object>();
+        dbObjIdMap.put("status", "$status");
+        dbObjIdMap.put("stateCode", "$stateCode");
+        dbObjIdMap.put("city", "$city");
+
+        ArrayList<BsonField> groups = new ArrayList<>();
+        groups.add(Accumulators.sum("cityCount", 1));
+        groups.add(Accumulators.max("city", "$city"));
+        groups.add(Accumulators.max("stateCode", "$stateCode"));
+
+        Map<String, Object> dbObjIdMap2 = new HashMap<String, Object>();
+        dbObjIdMap2.put("city", "$_id.city");
+        dbObjIdMap2.put("stateCode", "$_id.stateCode");
+        dbObjIdMap2.put("count", "$cityCount");
+
+        ArrayList<BsonField> groups2 = new ArrayList<>();
+        groups2.add(Accumulators.push("cities",  new BasicDBObject(dbObjIdMap2)));
+        groups2.add(Accumulators.sum("cityCount", "$cityCount"));
+
+        ArrayList<Bson> filters = new ArrayList<>();
+        filters.add(Filters.ne("city", null));
+        filters.add(Filters.ne("city", ""));
+
+        //TODO add limit 100
+        List agg = Arrays.asList(
+                Aggregates.match(Filters.and(filters)),
+                Aggregates.group( new BasicDBObject(dbObjIdMap), groups),
+                Aggregates.group("$_id.status", groups2),
+                Aggregates.sort(Sorts.descending("city.count"))
+
+        );
+        return this.mongoCollection().aggregate(agg, CityLeaderboardRecord.class);
     }
 
 

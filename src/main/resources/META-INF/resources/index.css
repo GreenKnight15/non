@@ -66,3 +66,7 @@ footer {
     justify-content: center;
     padding: 5px;
 }
+
+.selectedFilter{
+    color: green;
+}

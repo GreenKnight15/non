@@ -105,8 +105,8 @@
 
 
 <div ng-app="non" ng-controller="nonController" ng-cloak layout="row" ng-init="showStates()">
-    <div flex="33"></div>
-    <div layout="column" layout-align="start" flex="33">
+    <div flex="25"></div>
+    <div layout="column" layout-align="start" flex="50">
         <!-- Filters    -->
         <div>
             <div>
@@ -120,19 +120,15 @@
                 <md-divider ></md-divider>
             </div>
             <md-content >
-                <md-toolbar class=" md-hue-1">
-                    <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
-
-                        <md-button class=" md-hue-1" aria-label="Cities" disabled hidden>
+                <md-toolbar class="md-hue-1">
+                    <section layout="row" layout-sm="column" layout-align="center center" layout-wrap >
+                        <md-button aria-label="States" class="md-headline mg-hue-3" ng-class="{ 'md-raised' : showCityLeaderboards }" ng-click="showCities()" ng-disabled="showCityLeaderboards" style="font-family: 'Lobster', cursive;font-size: 14px; text-align: center;color:#5e0d0c">
                             Cities
                         </md-button>
-                        <md-button class=" md-hue-1" aria-label="States" ng-click="showStates()" ng-disabled="showStateLeaderboards" class="md-headline" style="font-family: 'Lobster', cursive;font-size: 14px; text-align: center;color:#5e0d0c">
+                        <md-button aria-label="States" class="md-headline mg-hue-3" ng-class="{ 'md-raised' : showStateLeaderboards }"  ng-click="showStates()" ng-disabled="showStateLeaderboards" style="font-family: 'Lobster', cursive;font-size: 14px; text-align: center;color:#5e0d0c">
                             States
                         </md-button>
-                        <md-button class="md-hue-2" aria-label="Countries" ng-disabled="showCountryLeaderboards" ng-if="showCountryLeaderboards" class="md-headline" style="font-family: 'Lobster', cursive;font-size: 14px; text-align: center;color:#5e0d0c">
-                            Countries
-                        </md-button>
-                        <md-button class=" md-hue-1" aria-label="Countries" ng-click="showCountries()" ng-if="!showCountryLeaderboards" class="md-headline" style="font-family: 'Lobster', cursive;font-size: 14px; text-align: center;color:#5e0d0c">
+                        <md-button aria-label="Countries" class="md-headline mg-hue-3" ng-class="{ 'md-raised' : showCountryLeaderboards }" ng-click="showCountries()"  ng-disabled="showCountryLeaderboards" style="font-family: 'Lobster', cursive;font-size: 14px; text-align: center;color:#5e0d0c">
                             Countries
                         </md-button>
                     </section>
@@ -242,6 +238,57 @@
                 <md-divider></md-divider>
             </div>
         </div>
+        <!-- City leaderboards   -->
+        <div layout-gt-sm="row" flex>
+            <!-- Leaderboard list 1    -->
+            <div flex="grow" class="flex" ng-if="showCityLeaderboards">
+
+                <md-toolbar layout="row" class="md-hue-1">
+                    <div class="md-toolbar-tools">
+                        <span style="font-family: 'Lobster', cursive;font-size: 14px; text-align: center;color:#5e0d0c">Nice</span>
+                    </div>
+                </md-toolbar>
+                <md-divider ></md-divider>
+
+                <md-content>
+                    <md-list class="md-dense" flex>
+                        <md-subheader class="md-no-sticky" hidden>Cities</md-subheader>
+                        <md-list-item class="md-2-line" ng-repeat="c in niceCities | orderBy:'-count'" ng-click="null">
+                            <div class="md-list-item-text" layout="row">
+                                <h3>{{ c.city }}</h3><h3>, {{c.stateCode}}</h3>
+                                <h1 class="md-secondary" >{{ c.count }}</h1>
+                            </div>
+                        </md-list-item>
+                    </md-list>
+                </md-content>
+            </div>
+            <!-- Leaderboard divider    -->
+            <md-divider ></md-divider>
+            <!-- Leaderboard list 2    -->
+            <div flex="grow" class="flex" ng-if="showCityLeaderboards">
+
+                <md-toolbar layout="row"  class="md-hue-1">
+                    <div class="md-toolbar-tools">
+                        <span style="font-family: 'Lobster', cursive;font-size: 14px; text-align: center;color:#5e0d0c">Naughty</span>
+                    </div>
+                </md-toolbar>
+                <md-divider ></md-divider>
+
+                <md-content>
+                    <md-list class="md-dense" flex>
+                        <md-subheader class="md-no-sticky" hidden>Cities</md-subheader>
+                        <md-list-item class="md-2-line" ng-repeat="c in naughtyCities | orderBy:'-count'" ng-click="null">
+                            <div class="md-list-item-text" layout="row">
+                                <h3>{{ c.city }}</h3 ><h3>, {{c.stateCode}}</h3>
+                                <h1 class="md-secondary" >{{ c.count }}</h1>
+                            </div>
+
+                        </md-list-item>
+                    </md-list>
+                </md-content>
+                <md-divider></md-divider>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -280,4 +327,4 @@
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
 <script src="snow.js"></script>
 <script src="ajax.js"></script>
-<script src="nonController.js"></script>
+<script src="appController.js"></script>
