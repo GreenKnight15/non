@@ -58,235 +58,136 @@
     <li></li>
     <li></li>
 </ul>
+<div ng-app="non" ng-controller="nonController" ng-cloak ng-init="showStates()">
 
-<div id="countdown">
-    <h1>Christmas Countdown</h1>
-    <div id="clock"></div>
-</div>
-<hr>
-<div id="question">
-    <h1>Have you been naughty or nice?</h1>
-</div>
-
-<form>
-    <div class="pf-l-bullseye">
-        <div style="padding: 10px" class="pf-l-bullseye__item">
-            <div class="pf-c-card" style="width:400px; height:175px; border-radius:10px">
-                <strong>
-                    <div class="pf-c-card__header pf-c-title pf-m-md" style="font-family: 'Lobster', cursive;font-size:36px; color:#5e0d0c; text-align: center">Nice</div>
-                </strong>
-                <div class="pf-c-card__body">
-                    <h1 class="nice-count" style="font-family: 'Lobster', cursive;font-size: 26px; text-align: center;color:#5e0d0c"></h1>
-                </div>
-            </div>
-        </div>
-        <div style="padding: 10px" class="pf-l-bullseye__item">
-            <div class="pf-c-card" style="width:400px; height:175px; border-radius:10px">
-                <strong>
-                    <div class="pf-c-card__header pf-c-title pf-m-md" style="font-family: 'Lobster', cursive;font-size:36px; color:#5e0d0c; text-align: center">Naughty</div>
-                </strong>
-                <div class="pf-c-card__body">
-                    <h1 class="naughty-count" style="font-family: 'Lobster', cursive;font-size: 26px; text-align: center;color:#5e0d0c"></h1>
-                </div>
-            </div>
-        </div>
+    <div id="countdown">
+        <h1>Christmas Countdown</h1>
+        <div id="clock"></div>
+    </div>
+    <hr>
+    <div id="question">
+        <h1>Have you been naughty or nice?</h1>
     </div>
 
-    <div style="margin-top: 20px" class="pf-l-bullseye">
-        <div style="padding: 10px" class="pf-l-bullseye__item">
-            <button id="add-nice" type="button" class="snowButton">Nice</button>
-        </div>
-        <div style="padding: 10px" class="pf-l-bullseye__item">
-            <button id="add-naughty" type="button" class="snowButton">Naughty</button>
-        </div>
-    </div>
-</form>
-<div style="padding:24px"></div>
-
-
-<div ng-app="non" ng-controller="nonController" ng-cloak layout="row" ng-init="showStates()">
-    <div flex="25"></div>
-    <div layout="column" layout-align="start" flex="50">
-        <!-- Filters    -->
-        <div>
-            <div>
-                <md-toolbar layout="row" class="md-hue-1">
-                    <section class="md-toolbar-tools" layout-align="center center" >
-                        <span class="md-headline" style="font-family: 'Lobster', cursive;font-size: 26px; text-align: center;color:#5e0d0c">
-                            Leaderboard
+    <form>
+        <div class="pf-l-bullseye">
+            <div style="padding: 10px" class="pf-l-bullseye__item">
+                <div class="pf-c-card" style="width:400px; height:175px; border-radius:10px">
+                    <div layout-align="center" class="pf-c-card__header pf-c-title pf-m-md">
+                        <span style="font-family: 'Lobster', cursive;font-size:36px; color:#5e0d0c; text-align: center;">
+                            Nice
                         </span>
-                    </section>
-                </md-toolbar>
-                <md-divider ></md-divider>
-            </div>
-            <md-content >
-                <md-toolbar class="md-hue-1">
-                    <section layout="row" layout-sm="column" layout-align="center center" layout-wrap >
-                        <md-button aria-label="States" class="md-headline mg-hue-3" ng-class="{ 'md-raised' : showCityLeaderboards }" ng-click="showCities()" ng-disabled="showCityLeaderboards" style="font-family: 'Lobster', cursive;font-size: 14px; text-align: center;color:#5e0d0c">
-                            Cities
-                        </md-button>
-                        <md-button aria-label="States" class="md-headline mg-hue-3" ng-class="{ 'md-raised' : showStateLeaderboards }"  ng-click="showStates()" ng-disabled="showStateLeaderboards" style="font-family: 'Lobster', cursive;font-size: 14px; text-align: center;color:#5e0d0c">
-                            States
-                        </md-button>
-                        <md-button aria-label="Countries" class="md-headline mg-hue-3" ng-class="{ 'md-raised' : showCountryLeaderboards }" ng-click="showCountries()"  ng-disabled="showCountryLeaderboards" style="font-family: 'Lobster', cursive;font-size: 14px; text-align: center;color:#5e0d0c">
-                            Countries
-                        </md-button>
-                    </section>
-                </md-toolbar>
-            </md-content>
-        </div>
-        <md-divider ></md-divider>
-        <!-- State leaderboards   -->
-        <div layout-gt-sm="row" flex >
-            <!-- Leaderboard list 1    -->
-            <div flex="grow" class="flex" ng-if="showStateLeaderboards">
-
-                <md-toolbar layout="row" class="md-hue-1">
-                    <div class="md-toolbar-tools">
-                        <span style="font-family: 'Lobster', cursive;font-size: 14px; text-align: center;color:#5e0d0c">Nice</span>
                     </div>
-                </md-toolbar>
-                <md-divider ></md-divider>
-
-                <md-content>
-                    <md-list class="md-dense" flex>
-                        <md-subheader class="md-no-sticky" hidden>States</md-subheader>
-                        <md-list-item class="md-2-line" ng-repeat="state in niceStates | orderBy:'-count'" ng-click="null">
-                            <div class="md-list-item-text" layout="row">
-                                <h3>{{ state.state }}</h3>
-                                <h1 class="md-secondary" >{{ state.count }}</h1>
-                            </div>
-                        </md-list-item>
-                    </md-list>
-                </md-content>
-            </div>
-            <!-- Leaderboard divider    -->
-            <md-divider ></md-divider>
-            <!-- Leaderboard list 2    -->
-            <div flex="grow" class="flex" ng-if="showStateLeaderboards">
-
-                <md-toolbar layout="row"  class="md-hue-1">
-                    <div class="md-toolbar-tools">
-                        <span style="font-family: 'Lobster', cursive;font-size: 14px; text-align: center;color:#5e0d0c">Naughty</span>
+                    <div class="pf-c-card__body">
+                        <h1 class="nice-count" style="font-family: 'Lobster', cursive;font-size: 26px; text-align: center;color:#5e0d0c"></h1>
                     </div>
-                </md-toolbar>
-                <md-divider ></md-divider>
-
-                <md-content >
-                    <md-list class="md-dense" flex>
-                        <md-subheader class="md-no-sticky" hidden>States</md-subheader>
-                        <md-list-item class="md-2-line" ng-repeat="state in naughtyStates | orderBy:'-count'" ng-click="null">
-                            <div class="md-list-item-text" layout="row">
-                                <h3>{{ state.state }}</h3 >
-                                <h1 class="md-secondary" >{{ state.count }}</h1>
-                            </div>
-
-                        </md-list-item>
-                    </md-list>
-                </md-content>
-                <md-divider></md-divider>
+                </div>
+            </div>
+            <div style="padding: 10px" class="pf-l-bullseye__item">
+                <div class="pf-c-card" style="width:400px; height:175px; border-radius:10px">
+                    <div layout-align="center" class="pf-c-card__header pf-c-title pf-m-md">
+                        <span style="font-family: 'Lobster', cursive;font-size:36px; color:#5e0d0c; text-align: center;">
+                            Naughty
+                        </span>
+                    </div>
+                    <div class="pf-c-card__body">
+                        <h1 class="naughty-count" style="font-family: 'Lobster', cursive;font-size: 26px; text-align: center;color:#5e0d0c"></h1>
+                    </div>
+                </div>
             </div>
         </div>
-        <!-- Country leaderboards   -->
-        <div layout-gt-sm="row" flex>
-            <!-- Leaderboard list 1    -->
-            <div flex="grow" class="flex" ng-if="showCountryLeaderboards">
 
-                <md-toolbar layout="row" class="md-hue-1">
-                    <div class="md-toolbar-tools">
-                        <span style="font-family: 'Lobster', cursive;font-size: 14px; text-align: center;color:#5e0d0c">Nice</span>
-                    </div>
-                </md-toolbar>
-                <md-divider ></md-divider>
-
-                <md-content>
-                    <md-list class="md-dense" flex>
-                        <md-subheader class="md-no-sticky" hidden>Countries</md-subheader>
-                        <md-list-item class="md-2-line" ng-repeat="c in niceCountries | orderBy:'-count'" ng-click="null">
-                            <div class="md-list-item-text" layout="row">
-                                <h3>{{ c.country }}</h3>
-                                <h1 class="md-secondary" >{{ c.count }}</h1>
-                            </div>
-                        </md-list-item>
-                    </md-list>
-                </md-content>
+        <div style="margin-top: 20px" class="pf-l-bullseye">
+            <div style="padding: 10px" class="pf-l-bullseye__item">
+                <button id="add-nice" type="button" class="snowButton">Nice</button>
             </div>
-            <!-- Leaderboard divider    -->
-            <md-divider ></md-divider>
-            <!-- Leaderboard list 2    -->
-            <div flex="grow" class="flex" ng-if="showCountryLeaderboards">
-
-                <md-toolbar layout="row"  class="md-hue-1">
-                    <div class="md-toolbar-tools">
-                        <span style="font-family: 'Lobster', cursive;font-size: 14px; text-align: center;color:#5e0d0c">Naughty</span>
-                    </div>
-                </md-toolbar>
-                <md-divider ></md-divider>
-
-                <md-content>
-                    <md-list class="md-dense" flex>
-                        <md-subheader class="md-no-sticky" hidden>Countries</md-subheader>
-                        <md-list-item class="md-2-line" ng-repeat="c in naughtyCountries | orderBy:'-count'" ng-click="null">
-                            <div class="md-list-item-text" layout="row">
-                                <h3>{{ c.country }}</h3 >
-                                <h1 class="md-secondary" >{{ c.count }}</h1>
-                            </div>
-
-                        </md-list-item>
-                    </md-list>
-                </md-content>
-                <md-divider></md-divider>
+            <div style="padding: 10px" class="pf-l-bullseye__item">
+                <button id="add-naughty" type="button" class="snowButton">Naughty</button>
             </div>
         </div>
-        <!-- City leaderboards   -->
-        <div layout-gt-sm="row" flex>
-            <!-- Leaderboard list 1    -->
-            <div flex="grow" class="flex" ng-if="showCityLeaderboards">
+    </form>
+    <div style="padding:24px"></div>
 
-                <md-toolbar layout="row" class="md-hue-1">
-                    <div class="md-toolbar-tools">
-                        <span style="font-family: 'Lobster', cursive;font-size: 14px; text-align: center;color:#5e0d0c">Nice</span>
-                    </div>
-                </md-toolbar>
-                <md-divider ></md-divider>
-
+    <div layout="row" >
+        <div flex="25"></div>
+        <div layout="column"  layout-align="start" flex="50">
+            <!-- Filters    -->
+            <div>
+                <div>
+                    <md-toolbar layout="row" class="md-hue-1">
+                        <section class="md-toolbar-tools" layout-align="center center" >
+                            <span style="font-family: 'Lobster', cursive;font-size: 26px; text-align: center;color:#5e0d0c">
+                                Leaderboard
+                            </span>
+                        </section>
+                    </md-toolbar>
+                    <md-divider ></md-divider>
+                </div>
                 <md-content>
-                    <md-list class="md-dense" flex>
-                        <md-subheader class="md-no-sticky" hidden>Cities</md-subheader>
-                        <md-list-item class="md-2-line" ng-repeat="c in niceCities | orderBy:'-count'" ng-click="null">
-                            <div class="md-list-item-text" layout="row">
-                                <h3>{{ c.city }}</h3><h3>, {{c.stateCode}}</h3>
-                                <h1 class="md-secondary" >{{ c.count }}</h1>
-                            </div>
-                        </md-list-item>
-                    </md-list>
+                    <md-toolbar class="md-hue-1">
+                        <section layout="row" layout-sm="column" layout-align="center center" >
+                            <md-button aria-label="States" class="md-hue-3" ng-class="{ 'md-raised' : showCityLeaderboards }" ng-click="showCities()" ng-disabled="showCityLeaderboards" style="font-family: 'Lobster', cursive;font-size: 14px; text-align: center;color:#5e0d0c">
+                                Cities
+                            </md-button>
+                            <md-button aria-label="States" class="md-hue-3" ng-class="{ 'md-raised' : showStateLeaderboards }"  ng-click="showStates()" ng-disabled="showStateLeaderboards" style="font-family: 'Lobster', cursive;font-size: 14px; text-align: center;color:#5e0d0c">
+                                States
+                            </md-button>
+                            <md-button aria-label="Countries" class="md-hue-3" ng-class="{ 'md-raised' : showCountryLeaderboards }" ng-click="showCountries()"  ng-disabled="showCountryLeaderboards" style="font-family: 'Lobster', cursive;font-size: 14px; text-align: center;color:#5e0d0c">
+                                Countries
+                            </md-button>
+                        </section>
+                    </md-toolbar>
                 </md-content>
             </div>
-            <!-- Leaderboard divider    -->
             <md-divider ></md-divider>
-            <!-- Leaderboard list 2    -->
-            <div flex="grow" class="flex" ng-if="showCityLeaderboards">
 
-                <md-toolbar layout="row"  class="md-hue-1">
-                    <div class="md-toolbar-tools">
-                        <span style="font-family: 'Lobster', cursive;font-size: 14px; text-align: center;color:#5e0d0c">Naughty</span>
-                    </div>
-                </md-toolbar>
+            <!-- Generic list  -->
+            <div layout-gt-sm="row" flex>
+                <!-- Leaderboard list 1    -->
+                <div flex="grow" class="flex">
+
+                    <md-toolbar layout="row" class="md-hue-1">
+                        <div class="md-toolbar-tools" layout-align="center center" >
+                            <span  style="font-family: 'Lobster', cursive;font-size: 20px; text-align: center;color:#5e0d0c">Nice</span>
+                        </div>
+                    </md-toolbar>
+                    <md-divider ></md-divider>
+                    <md-content>
+                        <md-list class="md-dense" flex>
+                            <md-list-item class="md-2-line" ng-repeat="item in niceItems | orderBy:'-count'" ng-click="null">
+                                <div class="md-list-item-text" layout="row">
+                                    <h3 ng-if="item.state">{{ item.state }}</h3>
+                                    <h3 ng-if="item.city">{{ item.city }}</h3><h3 ng-if="item.city">, {{item.stateCode}}</h3>
+                                    <h3 ng-if="item.country">{{ item.country }}</h3>
+                                    <h1 class="md-secondary" >{{ item.count }}</h1>
+                                </div>
+                            </md-list-item>
+                        </md-list>
+                    </md-content>
+                </div>
+                <!-- Leaderboard divider    -->
                 <md-divider ></md-divider>
-
-                <md-content>
-                    <md-list class="md-dense" flex>
-                        <md-subheader class="md-no-sticky" hidden>Cities</md-subheader>
-                        <md-list-item class="md-2-line" ng-repeat="c in naughtyCities | orderBy:'-count'" ng-click="null">
-                            <div class="md-list-item-text" layout="row">
-                                <h3>{{ c.city }}</h3 ><h3>, {{c.stateCode}}</h3>
-                                <h1 class="md-secondary" >{{ c.count }}</h1>
-                            </div>
-
-                        </md-list-item>
-                    </md-list>
-                </md-content>
-                <md-divider></md-divider>
+                <!-- Leaderboard list 2    -->
+                <div flex="grow" class="flex">
+                    <md-toolbar layout="row"  class="md-hue-1">
+                        <div class="md-toolbar-tools" layout-align="center center" >
+                            <span style="font-family: 'Lobster', cursive;font-size: 20px; text-align: center;color:#5e0d0c">Naughty</span>
+                        </div>
+                    </md-toolbar>
+                    <md-divider ></md-divider>
+                    <md-content>
+                        <md-list class="md-dense" flex>
+                            <md-list-item class="md-2-line" ng-repeat="item in naughtyItems | orderBy:'-count'" ng-click="null">
+                                <div class="md-list-item-text" layout="row">
+                                    <h3 ng-if="item.state">{{ item.state }}</h3>
+                                    <h3 ng-if="item.city">{{ item.city }}</h3><h3 ng-if="item.city">, {{item.stateCode}}</h3>
+                                    <h3 ng-if="item.country">{{ item.country }}</h3>
+                                    <h1 class="md-secondary" >{{ item.count }}</h1>
+                                </div>
+                            </md-list-item>
+                        </md-list>
+                    </md-content>
+                </div>
             </div>
         </div>
     </div>
@@ -327,4 +228,4 @@
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
 <script src="snow.js"></script>
 <script src="ajax.js"></script>
-<script src="appController.js"></script>
+<script src="nonController.js"></script>

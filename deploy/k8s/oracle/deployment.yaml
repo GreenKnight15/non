@@ -34,7 +34,7 @@ kind: Deployment
 metadata:
   name: non-dev
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: nonv4
@@ -45,7 +45,7 @@ spec:
     spec:
       containers:
         - name: non
-          image: greenknight15/non:v4
+          image: greenknight15/non:v4.2.0
           imagePullPolicy: Always
           ports:
             - containerPort: 8080

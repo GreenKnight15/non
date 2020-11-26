@@ -5,8 +5,8 @@ app.config(function($mdThemingProvider) {
 //    .primaryPalette('indigo')
 //    .accentPalette('orange');
 
-  var redMap = $mdThemingProvider.extendPalette('red', {
-    '500': '#5e0d0c',
+  var redMap = $mdThemingProvider.extendPalette('grey', {
+    '500': '#FAFAFA',
     'contrastDefaultColor': 'dark'
   });
   $mdThemingProvider.definePalette('redMap', redMap);
@@ -25,9 +25,9 @@ app.controller('nonController',['$scope', '$http',
                 for (i = 0; i < data.length; i++) {
                     item = data[i]
                     if(item.status == "NAUGHTY") {
-                       $scope.naughtyStates = item.states
+                       $scope.naughtyItems = item.states
                     } else if(item.status == "NICE"){
-                       $scope.niceStates = item.states
+                       $scope.niceItems = item.states
                     }
                 }
             });
@@ -43,9 +43,9 @@ app.controller('nonController',['$scope', '$http',
                 for (i = 0; i < data.length; i++) {
                     item = data[i]
                     if(item.status == "NAUGHTY") {
-                       $scope.naughtyCountries = item.countries
+                       $scope.naughtyItems = item.countries
                     } else if(item.status == "NICE"){
-                       $scope.niceCountries = item.countries
+                       $scope.niceItems = item.countries
                     }
                 }
             });
@@ -61,9 +61,9 @@ app.controller('nonController',['$scope', '$http',
                 for (i = 0; i < data.length; i++) {
                     item = data[i]
                     if(item.status == "NAUGHTY") {
-                       $scope.naughtyCities = item.cities
+                       $scope.naughtyItems = item.cities
                     } else if(item.status == "NICE"){
-                       $scope.niceCities = item.cities
+                       $scope.niceItems = item.cities
                     }
                 }
             });
